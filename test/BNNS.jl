@@ -1,3 +1,4 @@
+using .BNNS
 const RAND_TYPES = [BFloat16, Float16, Float32, Int8, UInt8, Int16, UInt16, Int32, UInt32, Int64,
                     UInt64]
 const RANDN_TYPES = [BFloat16, Float16, Float32]
