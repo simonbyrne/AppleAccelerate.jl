@@ -1,5 +1,5 @@
 using LinearAlgebra
-using AppleAccelerate
+using AppleAccelerate: AppleAccelerate, BNNS
 using DSP, Test, Random, Statistics, BFloat16s
 
 if !Sys.isapple()
