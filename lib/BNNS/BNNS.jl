@@ -1,4 +1,3 @@
-module BNNS
 using BFloat16s
 
 include("libBNNS.jl")
@@ -41,5 +40,3 @@ function randn end
 function rand! end
 function randn! end
 function seed! end
-
-end
