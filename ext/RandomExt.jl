@@ -1,4 +1,7 @@
 module RandomExt
+
+@static if Sys.isapple()
+
 using BFloat16s
 using AppleAccelerate: BNNS
 using .BNNS: BNNSFilterParameters,
@@ -43,11 +46,20 @@ end
 BNNS.bnns_rng() = RNG()
 BNNS.bnns_rng(seed::Integer) = RNG(seed)
 
-function _get_rng_state(rng::RNG)
-    stateSize = BNNSRandomGeneratorStateSize(rng.ptr)
-    state = Memory{UInt8}(undef, Int64(stateSize))
-    BNNSRandomGeneratorGetState(rng.ptr, stateSize, state)
-    return state
+@static if isdefined(Base, :Memory) #VERSION >= v"1.11"
+    function _get_rng_state(rng::RNG)
+        stateSize = BNNSRandomGeneratorStateSize(rng.ptr)
+        state = Memory{UInt8}(undef, Int64(stateSize))
+        BNNSRandomGeneratorGetState(rng.ptr, stateSize, state)
+        return state
+    end
+else
+    function _get_rng_state(rng::RNG)
+        stateSize = BNNSRandomGeneratorStateSize(rng.ptr)
+        state = Vector{UInt8}(undef, Int64(stateSize))
+        BNNSRandomGeneratorGetState(rng.ptr, stateSize, state)
+        return state
+    end
 end
 
 function Base.copy!(dest::RNG, src::RNG)
@@ -170,5 +182,5 @@ function BNNS.seed!(seed=Base.rand(UInt64))
     Random.seed!(BNNS.default_rng(), seed)
 end
 
-
+end
 end # module
